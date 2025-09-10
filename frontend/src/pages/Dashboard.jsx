@@ -30,6 +30,20 @@ function Dashboard() {
     navigate("/login");
   };
 
+  // 🔥 Fetch AI-powered budget tips (send all transactions to backend)
+  const fetchBudgetTips = async (allTransactions) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/tips", {
+        transactions: allTransactions,
+      });
+
+      setBudgetTips([res.data.tips]); // tips is string, so wrap in array
+    } catch (err) {
+      console.error("❌ Error fetching AI tips:", err.response?.data || err.message);
+      setBudgetTips(["⚠️ Could not fetch AI tips, please try again later."]);
+    }
+  };
+
   // Fetch transactions
   const fetchTransactions = async () => {
     try {
@@ -48,27 +62,8 @@ function Dashboard() {
       const balance = income - expense;
       setSummary({ income, expense, balance });
 
-      // Calculate category totals
-      const categoryTotals = res.data
-        .filter((tx) => tx.type === "expense")
-        .reduce((acc, tx) => {
-          if (!acc[tx.category]) acc[tx.category] = 0;
-          acc[tx.category] += tx.amount;
-          return acc;
-        }, {});
-
-      // Generate budget tips
-      const tips = Object.entries(categoryTotals)
-        .map(([category, amount]) => {
-          const percentage = income ? (amount / income) * 100 : 0;
-          if (percentage > 30) {
-            return `⚠️ You’re overspending on ${category} (${percentage.toFixed(1)}% of income)`;
-          }
-          return null;
-        })
-        .filter(Boolean);
-
-      setBudgetTips(tips);
+      // 🔥 Call AI tips API with all transactions
+      await fetchBudgetTips(res.data);
     } catch (err) {
       console.error("❌ Error fetching transactions:", err.response?.data || err.message);
       setMsg("Failed to load transactions.");
@@ -155,7 +150,9 @@ function Dashboard() {
             ))}
           </ul>
         ) : (
-          <p className="text-yellow-800">You’re doing great! No overspending detected.</p>
+          <p className="text-yellow-800">
+            You’re doing great! No overspending detected.
+          </p>
         )}
       </div>
 
