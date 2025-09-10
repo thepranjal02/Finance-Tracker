@@ -76,6 +76,7 @@ function Dashboard() {
     } else {
       navigate("/login");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Chart Data
