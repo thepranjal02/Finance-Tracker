@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 const userRoutes = require("./src/routes/userRoutes");
 const transactionRoutes = require("./src/routes/transactionRoutes");
+const tipsRoute=require("./src/routes/tips")
 
 const connectDB= require("./src/config/mongo.config")
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => res.send("Finance Tracker API running"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/tips", tipsRoute);
 
 
 
