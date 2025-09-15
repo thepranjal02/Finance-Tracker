@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import {
   PieChart,
@@ -14,6 +14,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import API from "../api";
 
 function Dashboard() {
   const token = localStorage.getItem("token");
@@ -33,7 +34,7 @@ function Dashboard() {
   // 🔥 Fetch AI-powered budget tips (send all transactions to backend)
   const fetchBudgetTips = async (allTransactions) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/tips", {
+      const res = await API.post("/api/tips", {
         transactions: allTransactions,
       });
 
@@ -47,7 +48,7 @@ function Dashboard() {
   // Fetch transactions
   const fetchTransactions = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/transactions", {
+      const res = await API.get("/api/transactions", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions(res.data);

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API from "../api"; 
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -18,14 +19,14 @@ function Login() {
     setMsg({ text: "", type: "" });
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", form);
+      const res = await API.post(`${import.meta.env.VITE_API_URL}/api/users/login`, form);
       localStorage.setItem("token", res.data.token);
       setMsg({ text: "✅ Login successful!", type: "success" });
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
-      setMsg({ 
-        text: "❌ Error: " + (err.response?.data?.msg || "Invalid credentials"), 
-        type: "error" 
+      setMsg({
+        text: "❌ Error: " + (err.response?.data?.msg || "Invalid credentials"),
+        type: "error"
       });
     } finally {
       setLoading(false);
@@ -59,10 +60,9 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 text-white font-semibold rounded-lg transition duration-300 ${
-              loading ? "bg-gray-400 cursor-not-allowed text-sm sm:text-base" 
-                      : "bg-indigo-500 hover:bg-indigo-600 text-sm sm:text-base"
-            }`}
+            className={`w-full py-2 text-white font-semibold rounded-lg transition duration-300 ${loading ? "bg-gray-400 cursor-not-allowed text-sm sm:text-base"
+                : "bg-indigo-500 hover:bg-indigo-600 text-sm sm:text-base"
+              }`}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -71,9 +71,8 @@ function Login() {
         {/* Message */}
         {msg.text && (
           <p
-            className={`mt-4 text-center text-sm sm:text-base font-medium ${
-              msg.type === "success" ? "text-green-600" : "text-red-600"
-            }`}
+            className={`mt-4 text-center text-sm sm:text-base font-medium ${msg.type === "success" ? "text-green-600" : "text-red-600"
+              }`}
           >
             {msg.text}
           </p>

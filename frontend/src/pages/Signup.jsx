@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
+import API from "../api";
 
 function Signup() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -18,7 +19,7 @@ function Signup() {
     setMsg({ text: "", type: "" });
 
     try {
-      await axios.post("http://localhost:5000/api/users/signup", form);
+      await API.post("/api/users/signup", form);
       setMsg({ text: "✅ Signup successful! Redirecting to login...", type: "success" });
       setTimeout(() => navigate("/login"), 1500); // redirect after 1.5s
     } catch (err) {
